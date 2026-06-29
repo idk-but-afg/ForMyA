@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joyeux anniversaire Alison 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8EE;
+    --cream-dark: #F7EBD8;
+    --violet: #7C3AED;
+    --violet-dark: #5B21B6;
+    --coral: #FF6B6B;
+    --gold: #FFC857;
+    --ink: #2D2540;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Quicksand', sans-serif;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ---------- Confetti ---------- */
+  #confetti-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .confetti {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 14px;
+    opacity: 0.85;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-5vh) rotate(0deg); }
+    100% { transform: translateY(105vh) rotate(360deg); }
+  }
+
+  /* ---------- Balloons (ambient background) ---------- */
+  .balloon {
+    position: fixed;
+    bottom: -200px;
+    width: 70px;
+    height: 90px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    z-index: 1;
+    opacity: 0.9;
+    animation: rise 18s linear infinite;
+  }
+  .balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    width: 1px;
+    height: 40px;
+    background: rgba(45,37,64,0.25);
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0); }
+    50%  { transform: translateY(-60vh) translateX(20px); }
+    100% { transform: translateY(-120vh) translateX(-10px); }
+  }
+
+  /* ---------- Nav dots (section indicator) ---------- */
+  .navdots {
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 20;
+  }
+  .navdots a {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(124,58,237,0.25);
+    display: block;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .navdots a:hover, .navdots a:focus-visible {
+    background: var(--violet);
+    transform: scale(1.3);
+  }
+  @media (max-width: 640px) {
+    .navdots { display: none; }
+  }
+
+  section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    padding: 80px 24px;
+    text-align: center;
+  }
+
+  /* ---------- HERO ---------- */
+  #hero {
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--coral);
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.2s;
+  }
+
+  .hero-name {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: clamp(3.5rem, 13vw, 8rem);
+    color: var(--violet-dark);
+    line-height: 0.95;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.4s;
+  }
+
+  .hero-sub {
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    font-weight: 600;
+    margin-top: 6px;
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.55s;
+  }
+
+  /* The big 15 — signature element */
+  .big-number-wrap {
+    position: relative;
+    margin: 36px 0 18px;
+    opacity: 0;
+    animation: popIn 0.9s cubic-bezier(.2,1.4,.4,1) forwards;
+    animation-delay: 0.9s;
+  }
+  .big-number {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: clamp(7rem, 32vw, 18rem);
+    line-height: 0.8;
+    color: var(--coral);
+    -webkit-text-stroke: 3px var(--violet-dark);
+    position: relative;
+    display: inline-block;
+  }
+  .big-number .spark {
+    position: absolute;
+    font-size: 0.18em;
+    animation: twinkle 1.6s ease-in-out infinite;
+  }
+  .spark.s1 { top: -6%; right: -4%; animation-delay: 0s; }
+  .spark.s2 { bottom: 4%; left: -8%; animation-delay: 0.5s; }
+  .spark.s3 { top: 40%; right: -10%; animation-delay: 1s; }
+
+  .big-number-caption {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.6vw, 1.3rem);
+    color: var(--violet-dark);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 1.3s;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.4) rotate(-8deg); }
+    60%  { opacity: 1; transform: scale(1.08) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-3deg); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50%      { opacity: 1; transform: scale(1.15); }
+  }
+
+  .scroll-hint {
+    margin-top: 46px;
+    font-size: 0.85rem;
+    color: var(--violet-dark);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards, bounce 2.2s ease-in-out infinite;
+    animation-delay: 1.6s, 2.4s;
+    font-weight: 600;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* ---------- Section common ---------- */
+  .section-title {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    color: var(--violet-dark);
+    margin-bottom: 28px;
+  }
+
+  .section-title .underline-coral {
+    position: relative;
+    color: var(--coral);
+  }
+
+  .card-deck {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    max-width: 920px;
+    width: 100%;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 22px;
+    padding: 30px 24px;
+    box-shadow: 0 14px 30px -16px rgba(124,58,237,0.25);
+    border: 2px solid var(--cream-dark);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .card:hover {
+    transform: translateY(-6px) rotate(-1deg);
+    box-shadow: 0 20px 36px -16px rgba(124,58,237,0.35);
+  }
+  .card .emoji {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .card h3 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+    color: var(--violet-dark);
+  }
+  .card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+
+  /* ---------- Message section ---------- */
+  #message {
+    background: var(--violet);
+    background: radial-gradient(circle at 30% 20%, var(--violet) 0%, var(--violet-dark) 70%);
+    color: var(--cream);
+  }
+  #message .section-title { color: var(--gold); }
+  #message .underline-coral { color: var(--cream); }
+
+  .letter {
+    max-width: 680px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 24px;
+    padding: clamp(28px, 5vw, 52px);
+    backdrop-filter: blur(2px);
+  }
+
+  .letter p {
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    line-height: 1.75;
+    margin-bottom: 16px;
+    color: var(--cream);
+  }
+
+  .letter .signoff {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin-top: 20px;
+  }
+
+  /* ---------- Wishes ---------- */
+  #wishes {
+    background: var(--cream-dark);
+  }
+
+  .wish-list {
+    list-style: none;
+    max-width: 600px;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .wish-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .wish-list .ico {
+    flex-shrink: 0;
+    font-size: 1.4rem;
+  }
+
+  /* ---------- Footer / CTA ---------- */
+  #finale {
+    padding-bottom: 100px;
+  }
+  .finale-title {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    color: var(--coral);
+    margin-bottom: 14px;
+  }
+  .finale-sub {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--violet-dark);
+    margin-bottom: 36px;
+    max-width: 460px;
+  }
+
+  .cta-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--white);
+    background: var(--coral);
+    border: none;
+    padding: 16px 38px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 10px 26px -8px rgba(255,107,107,0.55);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  .cta-btn:hover, .cta-btn:focus-visible {
+    transform: translateY(-3px) scale(1.03);
+    background: var(--violet);
+    box-shadow: 0 14px 30px -8px rgba(124,58,237,0.5);
+  }
+  .cta-btn:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .footer-note {
+    margin-top: 56px;
+    font-size: 0.8rem;
+    color: var(--violet-dark);
+    opacity: 0.6;
+  }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Burst overlay for click celebration */
+  #burst-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .burst-piece {
+    position: absolute;
+    border-radius: 2px;
+    animation: burstFly 1.1s ease-out forwards;
+  }
+  @keyframes burstFly {
+    0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.4); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="confetti-layer" aria-hidden="true"></div>
+<div id="burst-layer" aria-hidden="true"></div>
+
+<nav class="navdots" aria-label="Navigation des sections">
+  <a href="#hero" aria-label="Aller à l'accueil"></a>
+  <a href="#raisons" aria-label="Aller aux raisons"></a>
+  <a href="#message" aria-label="Aller au message"></a>
+  <a href="#wishes" aria-label="Aller aux souhaits"></a>
+  <a href="#finale" aria-label="Aller à la fin"></a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="eyebrow">C'est le grand jour</p>
+  <h1 class="hero-name">Joyeux anniversaire,<br>Alison !</h1>
+  <p class="hero-sub">LVRTT ON T'AIME TROP</p>
+
+  <div class="big-number-wrap">
+    <span class="big-number">
+      15
+      <span class="spark s1">✨</span>
+      <span class="spark s2">🎈</span>
+      <span class="spark s3">🎉</span>
+    </span>
+  </div>
+  <p class="big-number-caption">15 ans, TU COMMENCE A FAIRE VIELLE MDDMDMR</p>
+
+  <p class="scroll-hint">↓ scrolle, j'ai préparé un petit quelque chose ↓</p>
+</section>
+
+<!-- RAISONS -->
+<section id="raisons">
+  <h2 class="section-title reveal">Pourquoi on t'aime,<br><span class="underline-coral">en quelques mots</span></h2>
+  <div class="card-deck">
+    <div class="card reveal">
+      <span class="emoji">🌹</span>
+      <h3>TOI</h3>
+      <p>LVRT TES TROP UNE FILLE BIEN TU REND MV MEILLEUR.</p>
+    </div>
+    <div class="card reveal">
+      <span class="emoji">✨</span>
+      <h3>Ton cœur</h3>
+      <p>TES TROP QLQ DE CONFIANCE .</p>
+    </div>
+    <div class="card reveal">
+      <span class="emoji">🌟</span>
+      <h3>TA BEAUTÉ</h3>
+      <p>LVDM TES TROP BELLE COMMENT TU FAIS ???.</p>
+    </div>
+    <div class="card reveal">
+      <span class="emoji">🎂</span>
+      <h3>Toi tout simplement</h3>
+      <p>JSP QUOI DIRE MDRR TES JUSTE PARFAITE .</p>
+    </div>
+  </div>
+</section>
+
+<!-- MESSAGE -->
+<section id="message">
+  <h2 class="section-title reveal">Un petit mot<br><span class="underline-coral">juste pour toi</span></h2>
+  <div class="letter reveal">
+    <p>Alison,</p>
+    <p>TA MTN 15 ANS DEJA TA VEILLI MDRR PUIS JE VOULAIS TE DIRE CHANGE PAS RESTE COMME TU EST VRMT TES LA BEST</p>
+    <p>JE TE SOUHAITE TOUT LE MEILLEUR (AVEC MOI OUBLIE PAS)</p>
+    <p>Merci d'être la Joyeux, joyeux anniversaire 💜</p>
+    <p class="signoff">JE T'AIMEEE.</p>
+  </div>
+</section>
+
+<!-- FINALE -->
+<section id="finale">
+  <p class="eyebrow">Et pour finir</p>
+  <h2 class="finale-title reveal">Bon anniversaire,<br>Alison ! 🎂</h2>
+  <p class="finale-sub reveal">Appuie sur le bouton. Tu l'as bien mérité.</p>
+  <button class="cta-btn reveal" id="celebrate-btn">Faire péter les confettis 🎉</button>
+  <p class="footer-note">MDRR TA VRMT CRU TETE DE FLAN MDRR</p>
+</section>
+
+<script>
+  // Ambient confetti
+  const confettiColors = ['#FF6B6B', '#7C3AED', '#FFC857', '#FFFFFF'];
+  const confettiLayer = document.getElementById('confetti-layer');
+  for (let i = 0; i < 28; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = confettiColors[i % confettiColors.length];
+    c.style.animationDuration = (6 + Math.random() * 6) + 's';
+    c.style.animationDelay = (Math.random() * 8) + 's';
+    c.style.width = (6 + Math.random() * 6) + 'px';
+    c.style.height = (10 + Math.random() * 6) + 'px';
+    confettiLayer.appendChild(c);
+  }
+
+  // Ambient balloons
+  const balloonColors = ['#FF6B6B', '#7C3AED', '#FFC857'];
+  for (let i = 0; i < 5; i++) {
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    b.style.left = (10 + i * 18 + Math.random() * 8) + 'vw';
+    b.style.background = balloonColors[i % balloonColors.length];
+    b.style.animationDuration = (16 + Math.random() * 8) + 's';
+    b.style.animationDelay = (Math.random() * 10) + 's';
+    document.body.appendChild(b);
+  }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Click celebration burst
+  const burstLayer = document.getElementById('burst-layer');
+  const btn = document.getElementById('celebrate-btn');
+  function burst() {
+    const colors = ['#FF6B6B', '#7C3AED', '#FFC857', '#5B21B6'];
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    for (let i = 0; i < 60; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'burst-piece';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 120 + Math.random() * 260;
+      piece.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+      piece.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+      piece.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+      piece.style.left = cx + 'px';
+      piece.style.top = cy + 'px';
+      piece.style.width = (6 + Math.random() * 6) + 'px';
+      piece.style.height = (10 + Math.random() * 8) + 'px';
+      piece.style.background = colors[i % colors.length];
+      piece.style.animationDelay = (Math.random() * 0.15) + 's';
+      burstLayer.appendChild(piece);
+      setTimeout(() => piece.remove(), 1400);
+    }
+  }
+  btn.addEventListener('click', burst);
+</script>
+
+</body>
+</html>
